@@ -15,7 +15,6 @@ struct MapLabel
     double rotation = 0;
     double size = 100;
 
-    // Ограничение по высоте, если присутствует
     double bottom = -10000;
     double top = 10000;
 };
