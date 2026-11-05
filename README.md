@@ -9,6 +9,10 @@ Shows on the map:
 - Quest locations.
 - Extraction points.
 
+## Screenshots
+
+<img width="2064" height="1406" alt="image" src="https://github.com/user-attachments/assets/1b441cd2-397a-407c-bd65-43a3d3edb5f9" />
+
 ## Acknowledgments
 
 This project uses resources and API data provided by [tarkov.dev](https://tarkov.dev/).
