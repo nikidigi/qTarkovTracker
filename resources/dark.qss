@@ -1,0 +1,277 @@
+QMainWindow, QWidget#centralWidget {
+    background: #171D27;
+    color: #F2F4F8;
+}
+
+QLabel#appTitle {
+    color: #F2F4F8;
+    font-size: 17px;
+    font-weight: bold;
+}
+
+QStatusBar {
+    background: #202734;
+    color: #94A3B8;
+    border-top: 1px solid #3A4555;
+}
+
+QStatusBar::item {
+    border: none;
+}
+
+/** MapToolTip **/
+
+MapToolTip {
+    background-color: #292F3B;
+    border: 1px solid #3A4555;
+    border-radius: 14px;
+}
+
+MapToolTip QLabel {
+    background: transparent;
+    border: none;
+    color: #D2D8E2;
+}
+
+MapToolTip QLabel#tooltipTitle {
+    color: #F2F4F8;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+MapToolTip QToolButton {
+    background: transparent;
+    color: #9BA8BB;
+    font-size: 18px;
+    border: 1px solid #3A4555;
+    border-radius: 4px;
+    padding: 2px;
+}
+
+MapToolTip QToolButton:hover {
+    color: #FFFFFF;
+    background: #3A4555;
+}
+
+MapToolTip QToolButton:checked {
+    background: #45618A;
+}
+
+/** /MapToolTip **/
+
+QComboBox {
+    background: #171D27;
+    color: #F2F4F8;
+    border: 1px solid #3A4555;
+    border-radius: 7px;
+    padding: 8px 12px;
+    min-height: 22px;
+}
+
+QComboBox:hover {
+    border-color: #64748B;
+}
+
+QComboBox::drop-down {
+    border: none;
+    width: 28px;
+}
+
+QComboBox QAbstractItemView {
+    background-color: #252D3B;
+    color: #F2F4F8;
+    border: 1px solid #3A4555;
+    outline: none;
+    selection-background-color: #364255;
+    selection-color: #FFFFFF;
+}
+
+QComboBox QAbstractItemView::item {
+    min-height: 30px;
+    padding: 4px 10px;
+}
+
+QComboBox QAbstractItemView::item:selected {
+    background-color: #364255;
+}
+
+QGraphicsView#mapView {
+    background: #222935;
+    border: 1px solid #3A4555;
+    border-radius: 10px;
+}
+
+QWidget#checkListPopup {
+    background: transparent;
+    border: none;
+}
+
+QFrame#popupContainer {
+    background-color: #252D3B;
+    border: 1px solid #3A4555;
+    border-radius: 10px;
+}
+
+QWidget#checkListPopup QLineEdit {
+    background-color: #171D27;
+    color: #F2F4F8;
+    border: 1px solid #3A4555;
+    border-radius: 6px;
+    padding: 8px 10px;
+}
+
+QWidget#checkListPopup QListWidget {
+    background: transparent;
+    color: #F2F4F8;
+    border: none;
+    outline: none;
+}
+
+QWidget#checkListPopup QListWidget::item {
+    padding: 0px 8px;
+    border-radius: 5px;
+}
+
+QWidget#checkListPopup QListWidget::item:hover {
+    background-color: #364255;
+}
+
+QWidget#checkListPopup QListWidget::item:selected {
+    background-color: transparent;
+}
+
+QWidget#checkListPopup QScrollBar:vertical {
+    background: transparent;
+    width: 8px;
+    margin: 0;
+}
+
+QWidget#checkListPopup QScrollBar::handle:vertical {
+    background: #4B5565;
+    border-radius: 4px;
+    min-height: 24px;
+}
+
+QWidget#checkListPopup QScrollBar::handle:vertical:hover {
+    background: #64748B;
+}
+
+QWidget#checkListPopup QScrollBar::add-line:vertical,
+QWidget#checkListPopup QScrollBar::sub-line:vertical {
+    height: 0;
+    border: none;
+}
+
+QWidget#checkListPopup QScrollBar::add-page:vertical,
+QWidget#checkListPopup QScrollBar::sub-page:vertical {
+    background: transparent;
+}
+
+/** HeaderWidget **/
+
+HeaderWidget {
+    background: #202734;
+    border-bottom: 1px solid #3A4555;
+}
+
+HeaderWidget QToolButton {
+    background: #252D3B;
+    border: 1px solid #3A4555;
+    border-radius: 8px;
+    padding: 8px;
+}
+
+HeaderWidget QToolButton:hover {
+    background: #364255;
+}
+
+HeaderWidget QToolButton:pressed {
+    background: #3B82F6;
+}
+
+HeaderWidget QToolButton#closeButton,
+HeaderWidget QToolButton#minimizeButton,
+HeaderWidget QToolButton#maximizeButton
+{
+    background: transparent;
+    border: none;
+    border-radius: 8px;
+}
+
+HeaderWidget QToolButton#minimizeButton,
+HeaderWidget QToolButton#maximizeButton
+{
+
+    border-radius: 8px;
+}
+
+HeaderWidget QToolButton#minimizeButton:hover,
+HeaderWidget QToolButton#maximizeButton:hover {
+    background: #303A49;
+}
+
+HeaderWidget QToolButton#closeButton {
+    background: #CB3044;
+    border: none;
+}
+
+HeaderWidget QToolButton#closeButton:hover {
+    background: #E13D51;
+}
+
+HeaderWidget QToolButton#closeButton
+{
+    background: #CF3746;
+}
+
+HeaderWidget QToolButton#closeButton:hover {
+    background: #E34D5B;
+}
+
+HeaderWidget QToolButton#modeButton,
+HeaderWidget QToolButton#langButton {
+    background: transparent;
+    border: none;
+    padding: 4px 6px;
+    font-weight: bold;
+}
+
+HeaderWidget QToolButton#modeButton[gameMode="pve"] {
+    color: #73E2A7;
+}
+
+HeaderWidget QToolButton#modeButton[gameMode="regular"] {
+    color: #E45B65;
+}
+
+HeaderWidget QToolButton#modeButton[gameMode="pvp-season"] {
+    color: #F2C879;
+}
+
+HeaderWidget QToolButton#langButton {
+    color: #F2F4F8;
+}
+
+HeaderWidget QFrame[separator="true"] {
+    background-color: #3A4555;
+    border: none;
+    min-width: 1px;
+    max-width: 1px;
+}
+
+HeaderWidget QMenu {
+    background-color: #252D3B;
+    color: #F2F4F8;
+    border: 1px solid #3A4555;
+    padding: 4px;
+}
+
+HeaderWidget QMenu::item {
+    padding: 6px 24px 6px 10px;
+}
+
+HeaderWidget QMenu::item:selected {
+    background-color: #3A4555;
+}
+
+/** /HeaderWidget **/

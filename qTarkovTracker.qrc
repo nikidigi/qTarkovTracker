@@ -1,0 +1,21 @@
+<RCC>
+    <qresource prefix="/">
+        <file>resources/dark.qss</file>
+        <file>resources/icons/markers/extract_transit.webp</file>
+        <file>resources/icons/markers/extract_shared.webp</file>
+        <file>resources/icons/markers/extract_scav.webp</file>
+        <file>resources/icons/markers/extract_pmc.webp</file>
+        <file>resources/icons/markers/circle-alert.svg</file>
+        <file>resources/icons/header/x.svg</file>
+        <file>resources/icons/header/minus.svg</file>
+        <file>resources/icons/header/minimize-2.svg</file>
+        <file>resources/icons/header/maximize-2.svg</file>
+        <file>resources/icons/map-pin.svg</file>
+        <file>resources/icons/header/list-checks.svg</file>
+        <file>resources/icons/header/folder.svg</file>
+        <file>resources/icons/markers/lock.svg</file>
+        <file>resources/icons/header/map-pinned.svg</file>
+        <file>resources/icons/markers/zap.svg</file>
+        <file>resources/icons/header/app.png</file>
+    </qresource>
+</RCC>
