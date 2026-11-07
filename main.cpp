@@ -20,6 +20,7 @@ int main(int argc, char *argv[])
     }
 
     a.setWindowIcon(QIcon(":/resources/app.png"));
+    a.setApplicationVersion(APP_VERSION);
 
     QFile file(":/resources/dark.qss");
 

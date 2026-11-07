@@ -22,6 +22,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->setupUi(this);
     ui->header->initialize();
 
+    setWindowTitle(QString("qTarkovTracker %1").arg(QApplication::applicationVersion()));
     setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
 
     loadMaps();

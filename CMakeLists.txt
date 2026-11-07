@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.19)
-project(qTarkovTracker LANGUAGES CXX)
+project(qTarkovTracker VERSION 0.1.0 LANGUAGES CXX)
+
 
 find_package(Qt6 6.5 REQUIRED COMPONENTS Core Widgets LinguistTools SvgWidgets Network)
 
@@ -41,6 +42,10 @@ qt_add_executable(qTarkovTracker
     widgets/mapmarker.h widgets/mapmarker.cpp
     widgets/maptooltip.h widgets/maptooltip.cpp
     widgets/mapview.h widgets/mapview.cpp
+)
+
+target_compile_definitions(qTarkovTracker PRIVATE
+    APP_VERSION="${PROJECT_VERSION}"
 )
 
 target_include_directories(qTarkovTracker PRIVATE
