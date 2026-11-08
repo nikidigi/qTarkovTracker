@@ -34,7 +34,12 @@ public:
     void setMarkerVisible(const QString &group, bool visible);
 
 private:
-    QSettings m_settings{ "qTarkovTracker", "qTarkovTracker" };
+    QSettings m_settings{
+        QSettings::IniFormat,
+        QSettings::UserScope,
+        "qTarkovTracker",
+        "qTarkovTracker"
+    };
 };
 
 #endif // APPSETTINGS_H
