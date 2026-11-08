@@ -42,6 +42,9 @@ qt_add_executable(qTarkovTracker
     widgets/mapmarker.h widgets/mapmarker.cpp
     widgets/maptooltip.h widgets/maptooltip.cpp
     widgets/mapview.h widgets/mapview.cpp
+    widgets/tilemapitem.h widgets/tilemapitem.cpp
+
+
 )
 
 target_compile_definitions(qTarkovTracker PRIVATE
@@ -70,8 +73,7 @@ set(RESOURCE_DIRS
 
 foreach(dir IN LISTS RESOURCE_DIRS)
     add_custom_command(TARGET qTarkovTracker POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E
-            $<IF:$<CONFIG:Debug>,create_symlink,copy_directory>
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
             "${CMAKE_CURRENT_SOURCE_DIR}/${dir}"
             "$<TARGET_FILE_DIR:qTarkovTracker>/${dir}"
         VERBATIM
