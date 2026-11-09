@@ -42,9 +42,6 @@ qt_add_executable(qTarkovTracker
     widgets/mapmarker.h widgets/mapmarker.cpp
     widgets/maptooltip.h widgets/maptooltip.cpp
     widgets/mapview.h widgets/mapview.cpp
-    widgets/tilemapitem.h widgets/tilemapitem.cpp
-
-
 )
 
 target_compile_definitions(qTarkovTracker PRIVATE
