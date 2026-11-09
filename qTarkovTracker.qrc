@@ -17,5 +17,6 @@
         <file>resources/icons/header/map-pinned.svg</file>
         <file>resources/icons/markers/zap.svg</file>
         <file>resources/icons/header/app.png</file>
+        <file>icon.png</file>
     </qresource>
 </RCC>
