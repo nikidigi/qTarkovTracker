@@ -4,13 +4,13 @@
 #include <algorithm>
 
 #include <QDir>
-#include <QDirIterator>
 #include <QFileDialog>
 #include <QFileInfo>
 #include <QJsonValue>
 #include <QList>
-#include <QResource>
 #include <QSet>
+#include <QSignalBlocker>
+#include <utility>
 
 #include "mapconfigloader.h"
 #include "screenshotparser.h"
@@ -45,6 +45,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     connect(ui->header, &HeaderWidget::languageChanged, this, [this](const QString &language) {
         m_settings.setLanguage(language);
+        const QString currentLayer = ui->layersComboBox->currentData().toString();
+        updateMapLayers(currentLayer);
         fetchAll();
     });
 
@@ -59,7 +61,14 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->mapView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     ui->mapView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
-    connect(ui->mapsComboBox, &QComboBox::currentIndexChanged, this, &MainWindow::updateMap);
+    connect(ui->mapsComboBox, &QComboBox::currentIndexChanged, this, [this]() {
+        const QString mapId = ui->mapsComboBox->currentData().value<MapConfig>().id;
+        updateMapLayers(m_settings.selectedMapLayer(mapId));
+        updateMap();
+    });
+
+    connect(ui->layersComboBox, &QComboBox::currentIndexChanged, this, [this]() { updateMap(); });
+
     connect(ui->mapsComboBox, &QComboBox::currentIndexChanged, this, &MainWindow::updateTasks);
     connect(ui->browseScreenshotsDirButton, &QToolButton::clicked, this,
             &MainWindow::browseScreenshotsDir);
@@ -114,8 +123,9 @@ void MainWindow::loadMaps()
 
     for (const auto &config : maps) {
         const QString svgPath = mapsDir.absoluteFilePath(config.id + ".svg");
+        const QString metadataPath = mapsDir.absoluteFilePath(config.id + "/metadata.json");
 
-        if (!QFileInfo::exists(svgPath))
+        if (!QFileInfo(svgPath).isFile() && !QFileInfo(metadataPath).isFile())
             continue;
 
         ui->mapsComboBox->addItem(config.id, QVariant::fromValue(config));
@@ -138,20 +148,24 @@ void MainWindow::loadSettings()
 
     restoreGeometry(m_settings.geometry());
 
-    const QString savedMap = m_settings.selectedMap();
+    {
+        const QSignalBlocker blocker(ui->mapsComboBox);
+        const QString savedMap = m_settings.selectedMap();
 
-    for (int i = 0; i < ui->mapsComboBox->count(); ++i) {
-        const auto config = ui->mapsComboBox->itemData(i).value<MapConfig>();
-
-        if (config.id == savedMap) {
-            ui->mapsComboBox->setCurrentIndex(i);
-            break;
+        for (int i = 0; i < ui->mapsComboBox->count(); ++i) {
+            const auto config = ui->mapsComboBox->itemData(i).value<MapConfig>();
+            if (config.id == savedMap) {
+                ui->mapsComboBox->setCurrentIndex(i);
+                break;
+            }
         }
     }
 
-    if (!m_settings.screenshotsDirectory().isEmpty()) {
+    const QString mapId = ui->mapsComboBox->currentData().value<MapConfig>().id;
+    updateMapLayers(m_settings.selectedMapLayer(mapId));
+
+    if (!m_settings.screenshotsDirectory().isEmpty())
         m_screenshotWatcher.setDirectory(m_settings.screenshotsDirectory());
-    }
 }
 
 void MainWindow::translateMaps()
@@ -206,17 +220,68 @@ void MainWindow::updateItems()
     ui->mapView->addItems(items, config);
 }
 
+const ImageMapMetadata *MainWindow::imageMapMetadata(const QString &mapId)
+{
+    if (mapId.isEmpty())
+        return nullptr;
+
+    auto it = m_imageMaps.constFind(mapId);
+    if (it == m_imageMaps.cend()) {
+        const QString path = QDir("maps").filePath(mapId + "/metadata.json");
+        if (!QFileInfo(path).isFile())
+            return nullptr;
+
+        auto metadata = ImageMapMetadata::load(path);
+        if (!metadata)
+            return nullptr;
+
+        it = m_imageMaps.insert(mapId, std::move(*metadata));
+    }
+
+    return &it.value();
+}
+
 void MainWindow::updateMap()
 {
     const MapConfig config = ui->mapsComboBox->currentData().value<MapConfig>();
 
-    if (config.id.isEmpty()) {
+    if (config.id.isEmpty())
+        return;
+
+    const QDir mapsDir("maps");
+
+    const QString svgPath = mapsDir.filePath(config.id + ".svg");
+
+    const QString metadataPath = mapsDir.filePath(config.id + "/metadata.json");
+
+    const QString layerId = ui->layersComboBox->currentData().toString();
+
+    bool loaded = false;
+
+    if (QFileInfo(metadataPath).isFile()) {
+        const ImageMapMetadata *metadata = imageMapMetadata(config.id);
+        if (!metadata)
+            return;
+
+        const ImageMapLayer *layer = metadata->layer(layerId);
+
+        if (!layer) {
+            qWarning() << "Unknown image map layer:" << layerId;
+            return;
+        }
+
+        loaded = ui->mapView->loadImageMap(*layer);
+    } else if (QFileInfo(svgPath).isFile()) {
+        loaded = ui->mapView->loadSvgMap(svgPath);
+    }
+
+    if (!loaded) {
+        qWarning() << "Cannot load map:" << config.id;
         return;
     }
 
-    m_settings.setSelectedMap(config.id);
+    m_settings.setSelectedMap(config.id, layerId);
 
-    ui->mapView->setMapFile("maps/" + config.id + ".svg");
     ui->mapView->clearItems();
 
     ui->mapView->addItems(m_api.mapsResponse().extracts(config.id), config);
@@ -229,6 +294,38 @@ void MainWindow::updateMap()
 
     updateItems();
     updatePlayerPosition(m_screenshotWatcher.lastScreenshot());
+}
+
+void MainWindow::updateMapLayers(const QString &preferredLayer)
+{
+    const QString mapId = ui->mapsComboBox->currentData().value<MapConfig>().id;
+    const QSignalBlocker blocker(ui->layersComboBox);
+
+    ui->layersComboBox->clear();
+    ui->layersComboBox->setEnabled(false);
+
+    const ImageMapMetadata *metadata = imageMapMetadata(mapId);
+    if (!metadata)
+        return;
+
+    QStringList layerIds = metadata->layers.keys();
+    layerIds.sort();
+
+    for (const QString &id : layerIds) {
+        const auto it = metadata->layers.constFind(id);
+        const QString name = it.value().name(m_settings.language());
+
+        ui->layersComboBox->addItem(name.isEmpty() ? id : name, id);
+    }
+
+    int index = ui->layersComboBox->findData(preferredLayer);
+    if (index < 0)
+        index = ui->layersComboBox->findData(metadata->defaultLayer);
+    if (index < 0 && ui->layersComboBox->count() > 0)
+        index = 0;
+
+    ui->layersComboBox->setCurrentIndex(index);
+    ui->layersComboBox->setEnabled(index >= 0);
 }
 
 void MainWindow::updateTasks()
@@ -267,11 +364,9 @@ void MainWindow::updatePlayerPosition(const QString &filename)
     if (!position)
         return;
 
-    const MapConfig config = ui->mapsComboBox->currentData().value<MapConfig>();
+    const auto config = ui->mapsComboBox->currentData().value<MapConfig>();
 
-    const QPointF point = config.convert(position->x, position->z);
-
-    ui->mapView->setPlayerPosition(point.x(), point.y(),
+    ui->mapView->setPlayerPosition(config, position->x, position->z,
                                    config.convertDirection(position->direction));
 }
 

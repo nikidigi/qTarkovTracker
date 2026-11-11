@@ -2,10 +2,11 @@
 #define MAPCONFIG_H
 
 #include <QList>
+#include <QMetaType>
 #include <QPointF>
+#include <QSize>
 #include <QString>
 #include <QUrl>
-#include <QMetaType>
 
 struct MapLabel
 {
@@ -33,11 +34,18 @@ struct MapConfig
 
     QList<MapLabel> labels;
 
-    QPointF convert(double x, double z) const;
+    // SVG: normalize coordinates using map bounds
+    QPointF convert(double gameX, double gameZ) const;
+
+    // Interactive map: normalize using image dimensions
+    QPointF convert(double gameX, double gameZ, int zoom, const QSize &canvasSize) const;
+
     double convertDirection(double direction) const;
 
 private:
-    QPointF toMapPixels(double gameX, double gameZ) const;
+    QPointF rotateCoordinates(double gameX, double gameZ) const;
+    QPointF toMapPixels(double gameX, double gameZ, int zoom) const;
+    QPointF normalizeToBounds(double gameX, double gameZ) const;
 };
 
 Q_DECLARE_METATYPE(MapConfig)

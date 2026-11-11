@@ -25,7 +25,8 @@ public:
     void setScreenshotsDirectory(const QString &path);
 
     QString selectedMap() const;
-    void setSelectedMap(const QString &map);
+    QString selectedMapLayer(const QString &map) const;
+    void setSelectedMap(const QString &map, const QString &layer = QString());
 
     QStringList tasks(const QString &map) const;
     void setTasks(const QString &map, const QStringList &tasks);
@@ -34,12 +35,8 @@ public:
     void setMarkerVisible(const QString &group, bool visible);
 
 private:
-    QSettings m_settings{
-        QSettings::IniFormat,
-        QSettings::UserScope,
-        "qTarkovTracker",
-        "qTarkovTracker"
-    };
+    QSettings m_settings{ QSettings::IniFormat, QSettings::UserScope, "qTarkovTracker",
+                          "qTarkovTracker" };
 };
 
 #endif // APPSETTINGS_H

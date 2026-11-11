@@ -9,7 +9,7 @@
 MapMarker::MapMarker(QGraphicsItem *parent) : QGraphicsItem(parent)
 {
     setFlag(ItemIgnoresTransformations);
-    setCursor(Qt::ArrowCursor);
+    setCursor(Qt::PointingHandCursor);
     setAcceptHoverEvents(true);
 
     m_toolTipTimer.setSingleShot(true);

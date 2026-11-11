@@ -55,9 +55,15 @@ QString AppSettings::selectedMap() const
     return m_settings.value("map/selected", "ground-zero").toString();
 }
 
-void AppSettings::setSelectedMap(const QString &value)
+QString AppSettings::selectedMapLayer(const QString &map) const
+{
+    return m_settings.value("map/" + map + "/layer").toString();
+}
+
+void AppSettings::setSelectedMap(const QString &value, const QString &layer)
 {
     m_settings.setValue("map/selected", value);
+    m_settings.setValue("map/" + value + "/layer", layer);
 }
 
 QStringList AppSettings::tasks(const QString &map) const

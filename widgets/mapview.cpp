@@ -1,10 +1,14 @@
 #include "mapview.h"
 
 #include "iconmapmarker.h"
+#include "imagemapitem.h"
 
-#include <QtDebug>
 #include <QDir>
+#include <QFileInfo>
 #include <QSvgRenderer>
+#include <QtDebug>
+
+#include <algorithm>
 
 MapView::MapView(QWidget *parent) : QGraphicsView{ parent }
 {
@@ -23,35 +27,6 @@ void MapView::clearItems()
 {
     qDeleteAll(m_markers);
     m_markers.clear();
-}
-
-void MapView::setMapFile(const QString &fileName)
-{
-    scene()->clear();
-    m_markers.clear();
-
-    m_map = new QGraphicsSvgItem(fileName);
-    m_playerMarker = nullptr;
-
-    resetTransform();
-    scene()->addItem(m_map);
-    // scene()->setSceneRect(m_map->boundingRect());
-
-    const QRectF bounds = m_map->sceneBoundingRect();
-    const qreal margin = bounds.width() * 0.15;
-
-    scene()->setSceneRect(bounds.adjusted(-margin, -margin, margin, margin));
-}
-
-void MapView::setMapWidth(int w)
-{
-    const qreal mapWidth = sceneRect().width();
-
-    if (mapWidth > 0) {
-        const qreal factor = w / mapWidth;
-
-        scale(factor, factor);
-    }
 }
 
 void MapView::removeGroup(const QString &group)
@@ -92,7 +67,8 @@ void MapView::setGroupVisible(const QString &group, bool visible)
     }
 }
 
-void MapView::setPlayerPosition(double nx, double ny, double direction)
+void MapView::setPlayerPosition(const MapConfig &config, double gameX, double gameZ,
+                                double direction)
 {
     if (!m_map) {
         return;
@@ -104,11 +80,7 @@ void MapView::setPlayerPosition(double nx, double ny, double direction)
         scene()->addItem(m_playerMarker);
     }
 
-    const QRectF bounds = m_map->sceneBoundingRect();
-
-    m_playerMarker->setPos(bounds.left() + nx * bounds.width(),
-                           bounds.top() + ny * bounds.height());
-
+    m_playerMarker->setPos(convertPosition(config, gameX, gameZ));
     m_playerMarker->setRotation(direction);
     m_playerMarker->show();
 }
@@ -126,18 +98,12 @@ void MapView::addItems(const QList<TarkovApi::MapItemPtr> &items, const MapConfi
             if (!extract)
                 break;
 
-            const QPointF point = config.convert(extract->position.x(), extract->position.z());
-
             auto *marker = new IconMapMarker(
                     QPixmap(":/resources/icons/markers/extract_" + extract->faction + ".webp"));
 
-            const QRectF bounds = m_map->sceneBoundingRect();
-
-            marker->setPos(bounds.left() + point.x() * bounds.width(),
-                           bounds.top() + point.y() * bounds.height());
-
             marker->setLabel(extract->name);
             marker->setGroup("extracts/" + extract->faction);
+            marker->setPos(convertPosition(config, extract->position.x(), extract->position.z()));
             marker->setVisible(m_groupVisibility.value(marker->group(), true));
             marker->setZValue(MarkerZ::Extract);
 
@@ -151,18 +117,12 @@ void MapView::addItems(const QList<TarkovApi::MapItemPtr> &items, const MapConfi
             if (!transit)
                 break;
 
-            const QPointF point = config.convert(transit->position.x(), transit->position.z());
-
             auto *marker =
                     new IconMapMarker(QPixmap(":/resources/icons/markers/extract_transit.webp"));
 
-            const QRectF bounds = m_map->sceneBoundingRect();
-
-            marker->setPos(bounds.left() + point.x() * bounds.width(),
-                           bounds.top() + point.y() * bounds.height());
-
             marker->setLabel(transit->description);
             marker->setGroup("extracts/transit");
+            marker->setPos(convertPosition(config, transit->position.x(), transit->position.z()));
             marker->setVisible(m_groupVisibility.value(marker->group(), true));
             marker->setZValue(MarkerZ::Transit);
 
@@ -192,6 +152,7 @@ void MapView::addItems(const QList<TarkovApi::MapItemPtr> &items, const MapConfi
                                           .arg(tr("View on Wiki")));
 
             marker->setGroup("tasks/" + task->id);
+            marker->setPos(convertPosition(config, task->position.x(), task->position.z()));
             marker->setVisible(m_groupVisibility.value(marker->group(), true));
             marker->setZValue(MarkerZ::Task);
 
@@ -205,14 +166,7 @@ void MapView::addItems(const QList<TarkovApi::MapItemPtr> &items, const MapConfi
             if (!lock)
                 break;
 
-            const QPointF point = config.convert(lock->position.x(), lock->position.z());
-
             auto *marker = new IconMapMarker(QPixmap(":/resources/icons/markers/lock.svg"));
-
-            const QRectF bounds = m_map->sceneBoundingRect();
-
-            marker->setPos(bounds.left() + point.x() * bounds.width(),
-                           bounds.top() + point.y() * bounds.height());
 
             QString description = "<p>" + lock->description + "</p>";
 
@@ -226,6 +180,7 @@ void MapView::addItems(const QList<TarkovApi::MapItemPtr> &items, const MapConfi
                                           .arg(lock->wikiLink.toHtmlEscaped(), tr("View on Wiki")));
 
             marker->setGroup("locks");
+            marker->setPos(convertPosition(config, lock->position.x(), lock->position.z()));
             marker->setVisible(m_groupVisibility.value(marker->group(), true));
             marker->setZValue(MarkerZ::Lock);
             marker->resize(18, 18);
@@ -240,18 +195,11 @@ void MapView::addItems(const QList<TarkovApi::MapItemPtr> &items, const MapConfi
             if (!sw)
                 break;
 
-            const QPointF point = config.convert(sw->position.x(), sw->position.z());
-
             auto *marker = new IconMapMarker(QPixmap(":/resources/icons/markers/zap.svg"));
 
-            const QRectF bounds = m_map->sceneBoundingRect();
-
-            marker->setPos(bounds.left() + point.x() * bounds.width(),
-                           bounds.top() + point.y() * bounds.height());
-
             marker->setMapToolTip(sw->name, "<p>" + sw->name + "</p>");
-
             marker->setGroup("switches");
+            marker->setPos(convertPosition(config, sw->position.x(), sw->position.z()));
             marker->setVisible(m_groupVisibility.value(marker->group(), true));
             marker->setZValue(MarkerZ::Switch);
             marker->resize(18, 18);
@@ -300,6 +248,79 @@ void MapView::addLabels(const MapConfig &config)
         item->setZValue(MarkerZ::Label);
         scene()->addItem(item);
     }
+}
+
+bool MapView::loadSvgMap(const QString &filePath)
+{
+    auto map = std::make_unique<QGraphicsSvgItem>(filePath);
+
+    if (!map->renderer() || !map->renderer()->isValid())
+        return false;
+
+    scene()->clear();
+    m_markers.clear();
+    m_playerMarker = nullptr;
+
+    resetTransform();
+
+    m_map = map.release();
+    m_imageLayer = { };
+
+    scene()->addItem(m_map);
+
+    const QRectF bounds = m_map->sceneBoundingRect();
+    const qreal margin = bounds.width() * 0.67;
+
+    scene()->setSceneRect(bounds.adjusted(-margin, -margin, margin, margin));
+
+    return true;
+}
+
+bool MapView::loadImageMap(const ImageMapLayer &layer)
+{
+    auto map = std::make_unique<ImageMapItem>();
+
+    if (!map->load(layer))
+        return false;
+
+    scene()->clear();
+    m_markers.clear();
+    m_playerMarker = nullptr;
+
+    resetTransform();
+
+    m_map = map.release();
+
+    m_imageLayer = layer;
+
+    scene()->addItem(m_map);
+
+    const QRectF bounds = m_map->sceneBoundingRect();
+    const qreal margin = bounds.width() * 0.67;
+
+    scene()->setSceneRect(bounds.adjusted(-margin, -margin, margin, margin));
+
+    const QRectF visible(layer.offset, layer.size);
+    const qreal padding = std::max(visible.width(), visible.height()) * 0.1;
+
+    fitInView(visible.adjusted(-padding, -padding, padding, padding), Qt::KeepAspectRatio);
+
+    return true;
+}
+
+QPointF MapView::convertPosition(const MapConfig &config, double gameX, double gameZ) const
+{
+    if (!m_map)
+        return { };
+
+    const QPointF normalized = m_imageLayer
+            ? config.convert(gameX, gameZ, m_imageLayer->zoom, m_imageLayer->sourceSize)
+            : config.convert(gameX, gameZ);
+
+    const QRectF bounds = m_map->sceneBoundingRect();
+
+    return { bounds.left() + normalized.x() * bounds.width(),
+             bounds.top() + normalized.y() * bounds.height() };
 }
 
 void MapView::wheelEvent(QWheelEvent *event)
