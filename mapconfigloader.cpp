@@ -29,7 +29,9 @@ QList<MapConfig> MapConfigLoader::parse(const QByteArray &json)
                 continue;
 
             const auto svgPath = map.value("svgPath").toString();
-            if (svgPath.isEmpty())
+            const auto tilePath = map.value("tilePath").toString();
+
+            if (svgPath.isEmpty() && tilePath.isEmpty())
                 continue;
 
             const auto transform = map.value("transform").toArray();
@@ -84,7 +86,7 @@ QList<MapConfig> MapConfigLoader::parse(const QByteArray &json)
                 config.labels.append(label);
             }
 
-            if (!config.id.isEmpty() && config.svgPath.isValid())
+            if (!config.id.isEmpty() && (!svgPath.isEmpty() || !tilePath.isEmpty()))
                 configs.append(config);
 
             break;

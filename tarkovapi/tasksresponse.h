@@ -17,7 +17,7 @@ public:
 
 private:
     MapItemTaskPtr createTask(const QJsonObject &task, const QJsonObject &objective,
-                                const QJsonObject &position) const;
+                              const QJsonObject &position) const;
 
     QList<MapItemPtr> parseZones(const QJsonObject &task, const QJsonObject &objective,
                                  const QString &mapId) const;

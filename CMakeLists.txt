@@ -22,6 +22,7 @@ qt_add_executable(qTarkovTracker
     README.md
 
     appsettings.h appsettings.cpp
+    imagemapmetadata.h imagemapmetadata.cpp
     mapconfig.cpp
     mapconfig.h
     mapconfigloader.cpp
@@ -39,6 +40,7 @@ qt_add_executable(qTarkovTracker
     widgets/checklistpopup.h widgets/checklistpopup.cpp
     widgets/headerwidget.h widgets/headerwidget.cpp
     widgets/iconmapmarker.h widgets/iconmapmarker.cpp
+    widgets/imagemapitem.h widgets/imagemapitem.cpp
     widgets/mapmarker.h widgets/mapmarker.cpp
     widgets/maptooltip.h widgets/maptooltip.cpp
     widgets/mapview.h widgets/mapview.cpp

@@ -23,7 +23,7 @@ QList<MapItemPtr> TasksResponse::findByMap(const QString &mapId) const
 }
 
 MapItemTaskPtr TasksResponse::createTask(const QJsonObject &task, const QJsonObject &objective,
-                                           const QJsonObject &position) const
+                                         const QJsonObject &position) const
 {
     auto result = std::make_shared<MapItemTask>();
 
@@ -34,7 +34,7 @@ MapItemTaskPtr TasksResponse::createTask(const QJsonObject &task, const QJsonObj
     result->wikiLink = task.value("wikiLink").toString();
 
     result->position = QVector3D(position.value("x").toDouble(), position.value("y").toDouble(),
-                                position.value("z").toDouble());
+                                 position.value("z").toDouble());
 
     return result;
 }

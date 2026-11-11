@@ -8,6 +8,8 @@
 
 #include "tarkovapi/client.h"
 
+#include "imagemapmetadata.h"
+
 QT_BEGIN_NAMESPACE
 namespace Ui {
 class MainWindow;
@@ -30,6 +32,7 @@ public slots:
 
     void updateItems();
     void updateMap();
+    void updateMapLayers(const QString &preferredLayer = { });
     void updateTasks();
     void updatePlayerPosition(const QString &);
 
@@ -45,6 +48,9 @@ private:
     TarkovApi::Client m_api;
     ScreenshotWatcher m_screenshotWatcher;
 
+    QHash<QString, ImageMapMetadata> m_imageMaps;
+
+    const ImageMapMetadata *imageMapMetadata(const QString &mapId);
     void fetchAll();
 };
 #endif // MAINWINDOW_H

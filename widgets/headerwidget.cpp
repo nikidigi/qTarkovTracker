@@ -37,6 +37,13 @@ void HeaderWidget::initialize()
         border: none;
     )");
 
+    auto *layersComboBox = findChild<QComboBox *>("layersComboBox");
+
+    layersComboBox->view()->parentWidget()->setStyleSheet(R"(
+        background-color: #252D3B;
+        border: none;
+    )");
+
     window()->installEventFilter(this);
     updateMaximizeButton();
 
