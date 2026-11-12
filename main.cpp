@@ -5,6 +5,8 @@
 #include <QTranslator>
 #include <QFile>
 
+#include "version.h"
+
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);

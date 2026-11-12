@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 3.19)
 project(qTarkovTracker VERSION 0.1.0 LANGUAGES CXX)
 
-
 find_package(Qt6 6.5 REQUIRED COMPONENTS Core Widgets LinguistTools SvgWidgets Network)
 
 set(CMAKE_AUTOUIC ON)
@@ -44,14 +43,33 @@ qt_add_executable(qTarkovTracker
     widgets/mapmarker.h widgets/mapmarker.cpp
     widgets/maptooltip.h widgets/maptooltip.cpp
     widgets/mapview.h widgets/mapview.cpp
+    widgets/autowidthcombobox.h widgets/autowidthcombobox.cpp
 )
 
-target_compile_definitions(qTarkovTracker PRIVATE
-    APP_VERSION="${PROJECT_VERSION}"
+find_package(Git REQUIRED)
+
+add_custom_target(update_version
+    COMMAND ${CMAKE_COMMAND}
+        "-DGIT_EXECUTABLE=${GIT_EXECUTABLE}"
+        "-DSOURCE_DIR=${CMAKE_SOURCE_DIR}"
+        "-DBUILD_DIR=${CMAKE_CURRENT_BINARY_DIR}"
+        "-DVERSION_MAJOR=${PROJECT_VERSION_MAJOR}"
+        "-DVERSION_MINOR=${PROJECT_VERSION_MINOR}"
+        -P "${CMAKE_SOURCE_DIR}/cmake/UpdateVersion.cmake"
+
+    BYPRODUCTS "${CMAKE_BINARY_DIR}/version.h"
+    COMMENT "Checking Git version"
+    VERBATIM
 )
+
+add_dependencies(qTarkovTracker update_version)
 
 target_include_directories(qTarkovTracker PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
+)
+
+target_include_directories(qTarkovTracker PRIVATE
+    "${CMAKE_CURRENT_BINARY_DIR}"
 )
 
 qt_add_translations(
