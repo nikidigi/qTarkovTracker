@@ -95,7 +95,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
         statusBar()->showMessage(tr("Tarkov API error: %1").arg(error), 10000);
     });
 
-    fetchAll();
+    QTimer::singleShot(100, [this]() {
+        fetchAll();
+    });
 }
 
 MainWindow::~MainWindow()
