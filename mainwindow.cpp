@@ -305,8 +305,10 @@ void MainWindow::updateMapLayers(const QString &preferredLayer)
     ui->layersComboBox->setEnabled(false);
 
     const ImageMapMetadata *metadata = imageMapMetadata(mapId);
-    if (!metadata)
+    if (!metadata) {
+         ui->layersComboBox->setVisible(false);
         return;
+    }
 
     QStringList layerIds = metadata->layers.keys();
     layerIds.sort();
@@ -326,6 +328,7 @@ void MainWindow::updateMapLayers(const QString &preferredLayer)
 
     ui->layersComboBox->setCurrentIndex(index);
     ui->layersComboBox->setEnabled(index >= 0);
+    ui->layersComboBox->setVisible(true);
 }
 
 void MainWindow::updateTasks()
