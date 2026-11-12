@@ -47,6 +47,8 @@ private:
 
     QPointF convertPosition(const MapConfig &config, double gameX, double gameZ) const;
 
+    void fitMap();
+
 protected:
     void wheelEvent(QWheelEvent *event) override;
 

@@ -20,7 +20,7 @@ MapView::MapView(QWidget *parent) : QGraphicsView{ parent }
     setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
 
     setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
-    setBackgroundBrush(Qt::darkGray);
+    setBackgroundBrush(QColor("#202733"));
 }
 
 void MapView::clearItems()
@@ -264,14 +264,11 @@ bool MapView::loadSvgMap(const QString &filePath)
     resetTransform();
 
     m_map = map.release();
-    m_imageLayer = { };
+    m_imageLayer = {};
 
     scene()->addItem(m_map);
 
-    const QRectF bounds = m_map->sceneBoundingRect();
-    const qreal margin = bounds.width() * 0.67;
-
-    scene()->setSceneRect(bounds.adjusted(-margin, -margin, margin, margin));
+    fitMap();
 
     return true;
 }
@@ -289,21 +286,14 @@ bool MapView::loadImageMap(const ImageMapLayer &layer)
 
     resetTransform();
 
-    m_map = map.release();
+    auto *imageMap = map.get();
 
+    m_map = map.release();
     m_imageLayer = layer;
 
     scene()->addItem(m_map);
 
-    const QRectF bounds = m_map->sceneBoundingRect();
-    const qreal margin = bounds.width() * 0.67;
-
-    scene()->setSceneRect(bounds.adjusted(-margin, -margin, margin, margin));
-
-    const QRectF visible(layer.offset, layer.size);
-    const qreal padding = std::max(visible.width(), visible.height()) * 0.1;
-
-    fitInView(visible.adjusted(-padding, -padding, padding, padding), Qt::KeepAspectRatio);
+    fitMap();
 
     return true;
 }
@@ -321,6 +311,37 @@ QPointF MapView::convertPosition(const MapConfig &config, double gameX, double g
 
     return { bounds.left() + normalized.x() * bounds.width(),
              bounds.top() + normalized.y() * bounds.height() };
+}
+
+void MapView::fitMap()
+{
+    if (!m_map)
+        return;
+
+    const auto *imageMap = dynamic_cast<const ImageMapItem *>(m_map);
+    const QRectF rect = imageMap ? imageMap->imageRect() : m_map->boundingRect();
+    const QRectF bounds = m_map->mapRectToScene(rect);
+
+    if (bounds.isEmpty())
+        return;
+
+    const QRectF sceneRect = bounds.adjusted(
+            -bounds.width() * 0.1,
+            -bounds.height() * 0.1,
+            bounds.width() * 0.1,
+            bounds.height() * 0.1
+            );
+
+    scene()->setSceneRect(sceneRect);
+
+    const QRectF viewRect = bounds.adjusted(
+            -bounds.width() * 0.05,
+            -bounds.height() * 0.05,
+            bounds.width() * 0.05,
+            bounds.height() * 0.05
+            );
+
+    fitInView(viewRect, Qt::KeepAspectRatio);
 }
 
 void MapView::wheelEvent(QWheelEvent *event)

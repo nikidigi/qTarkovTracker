@@ -14,6 +14,11 @@ public:
 
     QRectF boundingRect() const override { return m_bounds; }
 
+    QRectF imageRect() const
+    {
+        return QRectF(m_offset, m_pixmap.size());
+    }
+
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
                QWidget *widget = nullptr) override;
 
