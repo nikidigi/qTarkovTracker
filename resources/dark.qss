@@ -98,7 +98,6 @@ QComboBox QAbstractItemView::item:selected {
 QGraphicsView#mapView {
     background: #222935;
     border: 1px solid #3A4555;
-    border-radius: 10px;
 }
 
 QWidget#checkListPopup {
