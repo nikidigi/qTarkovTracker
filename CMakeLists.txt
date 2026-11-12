@@ -55,6 +55,7 @@ add_custom_target(update_version
         "-DBUILD_DIR=${CMAKE_CURRENT_BINARY_DIR}"
         "-DVERSION_MAJOR=${PROJECT_VERSION_MAJOR}"
         "-DVERSION_MINOR=${PROJECT_VERSION_MINOR}"
+        "-DVERSION_PATCH=${PROJECT_VERSION_PATCH}"
         -P "${CMAKE_SOURCE_DIR}/cmake/UpdateVersion.cmake"
 
     BYPRODUCTS "${CMAKE_BINARY_DIR}/version.h"

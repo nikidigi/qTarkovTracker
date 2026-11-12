@@ -1,4 +1,4 @@
-set(PATCH 0)
+set(APP_VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}")
 
 execute_process(
     COMMAND "${GIT_EXECUTABLE}" describe
@@ -11,26 +11,34 @@ execute_process(
 )
 
 if(TAG_RESULT EQUAL 0)
-    execute_process(
-        COMMAND "${GIT_EXECUTABLE}" rev-list
-                --count "${LAST_TAG}..HEAD"
-        WORKING_DIRECTORY "${SOURCE_DIR}"
-        OUTPUT_VARIABLE PATCH
-        OUTPUT_STRIP_TRAILING_WHITESPACE
-        RESULT_VARIABLE COUNT_RESULT
+    string(REGEX MATCH
+        "^v([0-9]+)\\.([0-9]+)\\.([0-9]+)$"
+        MATCHED_TAG "${LAST_TAG}"
     )
 
-    if(NOT COUNT_RESULT EQUAL 0)
-        message(FATAL_ERROR "Failed to count Git commits")
+    if(MATCHED_TAG)
+        set(MAJOR "${CMAKE_MATCH_1}")
+        set(MINOR "${CMAKE_MATCH_2}")
+        set(PATCH "${CMAKE_MATCH_3}")
+
+        execute_process(
+            COMMAND "${GIT_EXECUTABLE}" rev-list
+                    --count "${LAST_TAG}..HEAD"
+            WORKING_DIRECTORY "${SOURCE_DIR}"
+            OUTPUT_VARIABLE COMMITS
+            OUTPUT_STRIP_TRAILING_WHITESPACE
+            RESULT_VARIABLE COUNT_RESULT
+        )
+
+        if(COUNT_RESULT EQUAL 0)
+            math(EXPR PATCH "${PATCH} + ${COMMITS}")
+            set(APP_VERSION "${MAJOR}.${MINOR}.${PATCH}")
+        endif()
     endif()
 endif()
 
-set(APP_VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${PATCH}")
 set(VERSION_HEADER "${BUILD_DIR}/version.h")
-
-set(CONTENT
-    "#pragma once\n#define APP_VERSION \"${APP_VERSION}\"\n"
-)
+set(CONTENT "#pragma once\n#define APP_VERSION \"${APP_VERSION}\"\n")
 
 if(EXISTS "${VERSION_HEADER}")
     file(READ "${VERSION_HEADER}" OLD_CONTENT)
