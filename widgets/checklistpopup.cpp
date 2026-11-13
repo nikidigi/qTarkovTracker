@@ -5,16 +5,20 @@
 #include <QLineEdit>
 #include <QListWidget>
 #include <QListWidgetItem>
+#include <QScreen>
 #include <QSignalBlocker>
 #include <QToolButton>
 #include <QVBoxLayout>
 
+#include <QGuiApplication>
+
 CheckListPopup::CheckListPopup(QWidget *parent)
-    : QWidget(parent, Qt::Popup | Qt::FramelessWindowHint)
+    : QWidget(parent, Qt::Popup | Qt::FramelessWindowHint | Qt::NoDropShadowWindowHint)
 {
     setObjectName("checkListPopup");
     setAttribute(Qt::WA_TranslucentBackground);
     setFixedWidth(300);
+    setMaximumHeight(400);
 
     auto *outerLayout = new QVBoxLayout(this);
     outerLayout->setContentsMargins(2, 2, 2, 2);
@@ -42,9 +46,6 @@ CheckListPopup::CheckListPopup(QWidget *parent)
 
     m_list->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
     m_list->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-
-    m_list->setMinimumHeight(80);
-    m_list->setMaximumHeight(400);
 
     layout->addWidget(m_filter);
     layout->addWidget(m_list);
@@ -80,7 +81,6 @@ void CheckListPopup::setItems(const QList<Item> &items)
     m_list->viewport()->update();
 
     filterItems(m_filter->text());
-    updateListHeight();
 }
 
 void CheckListPopup::setFilterEnabled(bool enabled)
@@ -90,9 +90,43 @@ void CheckListPopup::setFilterEnabled(bool enabled)
 
 void CheckListPopup::showBelow(QToolButton *button)
 {
-    const QPoint position = button->mapToGlobal(QPoint(0, button->height() + 4));
+    m_filter->clear();
 
-    move(position);
+    QScreen *screen = button->screen();
+
+    if (!screen)
+        screen = QGuiApplication::primaryScreen();
+
+    if (!screen)
+        return;
+
+    const QPoint buttonPos = button->mapToGlobal(QPoint(0, 0));
+    const QRect available = screen->availableGeometry();
+
+    constexpr int spacing = 4;
+
+    const QSize popupSize = size();
+
+    int x = buttonPos.x();
+    int y = buttonPos.y() + button->height() + spacing;
+
+    if (y + popupSize.height() > available.bottom() + 1) {
+        y = buttonPos.y() - popupSize.height() - spacing;
+    }
+
+    x = std::clamp(
+            x,
+            available.left(),
+            std::max(available.left(), available.right() + 1 - popupSize.width())
+            );
+
+    y = std::clamp(
+            y,
+            available.top(),
+            std::max(available.top(), available.bottom() + 1 - popupSize.height())
+            );
+
+    move(x, y);
     show();
 
     button->setDown(false);
@@ -104,9 +138,10 @@ void CheckListPopup::filterItems(const QString &text)
 {
     for (int i = 0; i < m_list->count(); ++i) {
         auto *item = m_list->item(i);
-
         item->setHidden(!item->text().contains(text, Qt::CaseInsensitive));
     }
+
+    updateListHeight();
 }
 
 void CheckListPopup::updateListHeight()
@@ -119,10 +154,23 @@ void CheckListPopup::updateListHeight()
     }
 
     constexpr int rowHeight = 38;
+    constexpr int maxHeight = 400;
 
-    const int contentHeight = visibleCount * rowHeight;
+    const int height = std::min(
+            visibleCount * (rowHeight + m_list->spacing()),
+            maxHeight
+            );
 
-    m_list->setFixedHeight(std::clamp(contentHeight, 80, 400));
+    m_list->setFixedHeight(std::max(height, rowHeight));
 
-    adjustSize();
+    m_list->updateGeometry();
+
+    auto *innerLayout = m_list->parentWidget()->layout();
+    innerLayout->invalidate();
+    innerLayout->activate();
+
+    layout()->invalidate();
+    layout()->activate();
+
+    resize(width(), layout()->sizeHint().height());
 }

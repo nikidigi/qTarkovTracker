@@ -26,7 +26,6 @@ public:
 
     void setItems(const QList<Item> &items);
     void setFilterEnabled(bool enabled);
-    void setTitle(const QString &title);
 
     void showBelow(QToolButton *);
 
