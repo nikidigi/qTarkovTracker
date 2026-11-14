@@ -36,8 +36,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->header->setExtracts({
             { tr("PMC extracts"), "extracts/pmc", m_settings.markerVisible("extracts/pmc") },
             { tr("Scav extracts"), "extracts/scav", m_settings.markerVisible("extracts/scav") },
-            { tr("Shared extracts"), "extracts/shared",
-              m_settings.markerVisible("extracts/shared") },
+            { tr("Shared extracts"), "extracts/shared", m_settings.markerVisible("extracts/shared") },
             { tr("Transits"), "extracts/transit", m_settings.markerVisible("extracts/transit") },
             { tr("Locks"), "locks", m_settings.markerVisible("locks") },
             { tr("Switches"), "switches", m_settings.markerVisible("switches") },
@@ -62,9 +61,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
             });
 
     connect(ui->header, &HeaderWidget::taskToggled, this, &MainWindow::showTasks);
-
-    ui->mapView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    ui->mapView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
     connect(ui->mapsComboBox, &QComboBox::currentIndexChanged, this, [this]() {
         const QString mapId = ui->mapsComboBox->currentData().value<MapConfig>().id;

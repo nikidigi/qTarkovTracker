@@ -19,6 +19,9 @@ MapView::MapView(QWidget *parent) : QGraphicsView{ parent }
     setDragMode(QGraphicsView::ScrollHandDrag);
     setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
 
+    setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+
     setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
     setBackgroundBrush(QColor("#202733"));
 }
