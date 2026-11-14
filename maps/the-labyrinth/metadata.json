@@ -1,0 +1,19 @@
+{
+  "zoom": 4,
+  "layers": {
+    "main": {
+      "file": "main.png",
+      "offsetX": 134,
+      "offsetY": 307,
+      "width": 3785,
+      "height": 3506,
+      "sourceWidth": 4096,
+      "sourceHeight": 4096,
+      "name": {
+        "en": "Main",
+        "ru": "Основной"
+      }
+    }
+  },
+  "defaultLayer": "main"
+}
