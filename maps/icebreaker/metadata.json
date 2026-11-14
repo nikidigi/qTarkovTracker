@@ -1,214 +1,214 @@
 {
-  "zoom": 4,
+  "zoom": 5,
   "defaultLayer": "06_infirmary",
   "layers": {
     "00_control_room": {
-      "file": "00_control_room.png",
-      "offsetX": 1913,
-      "offsetY": 1532,
-      "width": 285,
-      "height": 138,
-      "sourceWidth": 4096,
-      "sourceHeight": 4096,
       "name": {
         "en": "Control Room",
         "ru": "Пост управления"
-      }
+      },
+      "file": "00_control_room.png",
+      "offsetX": 3829,
+      "offsetY": 3066,
+      "width": 563,
+      "height": 271,
+      "sourceWidth": 8192,
+      "sourceHeight": 8192
     },
     "01_engine_room": {
-      "file": "01_engine_room.png",
-      "offsetX": 1805,
-      "offsetY": 1438,
-      "width": 485,
-      "height": 720,
-      "sourceWidth": 4096,
-      "sourceHeight": 4096,
       "name": {
         "en": "Engine Room",
         "ru": "Машинное отделение"
-      }
+      },
+      "file": "01_engine_room.png",
+      "offsetX": 3612,
+      "offsetY": 2878,
+      "width": 968,
+      "height": 1436,
+      "sourceWidth": 8192,
+      "sourceHeight": 8192
     },
     "02_engine_room_upper": {
-      "file": "02_engine_room_upper.png",
-      "offsetX": 1760,
-      "offsetY": 1428,
-      "width": 596,
-      "height": 730,
-      "sourceWidth": 4096,
-      "sourceHeight": 4096,
       "name": {
         "en": "Upper Engine Room",
         "ru": "Верхнее машинное отделение"
-      }
+      },
+      "file": "02_engine_room_upper.png",
+      "offsetX": 3523,
+      "offsetY": 2859,
+      "width": 1186,
+      "height": 1455,
+      "sourceWidth": 8192,
+      "sourceHeight": 8192
     },
     "03_fuel_pumps_lower": {
-      "file": "03_fuel_pumps_lower.png",
-      "offsetX": 1666,
-      "offsetY": 1423,
-      "width": 783,
-      "height": 735,
-      "sourceWidth": 4096,
-      "sourceHeight": 4096,
       "name": {
         "en": "Lower Fuel Pumps",
         "ru": "Нижний уровень топливных насосов"
-      }
+      },
+      "file": "03_fuel_pumps_lower.png",
+      "offsetX": 3336,
+      "offsetY": 2848,
+      "width": 1558,
+      "height": 1466,
+      "sourceWidth": 8192,
+      "sourceHeight": 8192
     },
     "04_fuel_pumps": {
-      "file": "04_fuel_pumps.png",
-      "offsetX": 1773,
-      "offsetY": 1428,
-      "width": 572,
-      "height": 730,
-      "sourceWidth": 4096,
-      "sourceHeight": 4096,
       "name": {
         "en": "Fuel Pumps",
         "ru": "Топливные насосы"
-      }
+      },
+      "file": "04_fuel_pumps.png",
+      "offsetX": 3549,
+      "offsetY": 2859,
+      "width": 1138,
+      "height": 1455,
+      "sourceWidth": 8192,
+      "sourceHeight": 8192
     },
     "05_storage_ecurity": {
-      "file": "05_storage_ecurity.png",
-      "offsetX": 1636,
-      "offsetY": 1,
-      "width": 824,
-      "height": 3910,
-      "sourceWidth": 4096,
-      "sourceHeight": 4096,
       "name": {
         "en": "Storage / Security",
         "ru": "Склад и охрана"
-      }
+      },
+      "file": "05_storage_ecurity.png",
+      "offsetX": 3277,
+      "offsetY": 8,
+      "width": 1638,
+      "height": 7808,
+      "sourceWidth": 8192,
+      "sourceHeight": 8192
     },
     "06_infirmary": {
-      "file": "06_infirmary.png",
-      "offsetX": 1636,
-      "offsetY": 223,
-      "width": 824,
-      "height": 3868,
-      "sourceWidth": 4096,
-      "sourceHeight": 4096,
       "name": {
         "en": "Infirmary",
         "ru": "Лазарет"
-      }
+      },
+      "file": "06_infirmary.png",
+      "offsetX": 3277,
+      "offsetY": 450,
+      "width": 1638,
+      "height": 7727,
+      "sourceWidth": 8192,
+      "sourceHeight": 8192
     },
     "07_helipad": {
-      "file": "07_helipad.png",
-      "offsetX": 1641,
-      "offsetY": 222,
-      "width": 813,
-      "height": 3871,
-      "sourceWidth": 4096,
-      "sourceHeight": 4096,
       "name": {
         "en": "Helipad",
         "ru": "Вертолётная площадка"
-      }
+      },
+      "file": "07_helipad.png",
+      "offsetX": 3287,
+      "offsetY": 450,
+      "width": 1616,
+      "height": 7730,
+      "sourceWidth": 8192,
+      "sourceHeight": 8192
     },
     "08_gym-canteen": {
-      "file": "08_gym-canteen.png",
-      "offsetX": 1663,
-      "offsetY": 1109,
-      "width": 769,
-      "height": 2903,
-      "sourceWidth": 4096,
-      "sourceHeight": 4096,
       "name": {
         "en": "Gym / Canteen",
         "ru": "Спортзал и столовая"
-      }
+      },
+      "file": "08_gym-canteen.png",
+      "offsetX": 3332,
+      "offsetY": 2224,
+      "width": 1526,
+      "height": 5795,
+      "sourceWidth": 8192,
+      "sourceHeight": 8192
     },
     "09_accommodation_lower": {
-      "file": "09_accommodation_lower.png",
-      "offsetX": 1732,
-      "offsetY": 1109,
-      "width": 632,
-      "height": 2902,
-      "sourceWidth": 4096,
-      "sourceHeight": 4096,
       "name": {
         "en": "Lower Accommodation",
         "ru": "Нижний уровень жилых помещений"
-      }
+      },
+      "file": "09_accommodation_lower.png",
+      "offsetX": 3470,
+      "offsetY": 2223,
+      "width": 1253,
+      "height": 5794,
+      "sourceWidth": 8192,
+      "sourceHeight": 8192
     },
     "10_accommodation_mid": {
-      "file": "10_accommodation_mid.png",
-      "offsetX": 1732,
-      "offsetY": 1155,
-      "width": 632,
-      "height": 2793,
-      "sourceWidth": 4096,
-      "sourceHeight": 4096,
       "name": {
         "en": "Middle Accommodation",
         "ru": "Средний уровень жилых помещений"
-      }
+      },
+      "file": "10_accommodation_mid.png",
+      "offsetX": 3470,
+      "offsetY": 2316,
+      "width": 1252,
+      "height": 5575,
+      "sourceWidth": 8192,
+      "sourceHeight": 8192
     },
     "11_accommodation_upper": {
-      "file": "11_accommodation_upper.png",
-      "offsetX": 1732,
-      "offsetY": 1177,
-      "width": 632,
-      "height": 2771,
-      "sourceWidth": 4096,
-      "sourceHeight": 4096,
       "name": {
         "en": "Upper Accommodation",
         "ru": "Верхний уровень жилых помещений"
-      }
+      },
+      "file": "11_accommodation_upper.png",
+      "offsetX": 3470,
+      "offsetY": 2360,
+      "width": 1252,
+      "height": 5531,
+      "sourceWidth": 8192,
+      "sourceHeight": 8192
     },
     "12_officers_deck": {
-      "file": "12_officers_deck.png",
-      "offsetX": 1732,
-      "offsetY": 1222,
-      "width": 632,
-      "height": 2716,
-      "sourceWidth": 4096,
-      "sourceHeight": 4096,
       "name": {
         "en": "Officers' Deck",
         "ru": "Офицерская палуба"
-      }
+      },
+      "file": "12_officers_deck.png",
+      "offsetX": 3470,
+      "offsetY": 2446,
+      "width": 1252,
+      "height": 5424,
+      "sourceWidth": 8192,
+      "sourceHeight": 8192
     },
     "13_stairs_blocked": {
-      "file": "13_stairs_blocked.png",
-      "offsetX": 1703,
-      "offsetY": 1268,
-      "width": 690,
-      "height": 1871,
-      "sourceWidth": 4096,
-      "sourceHeight": 4096,
       "name": {
         "en": "Blocked Stairs",
         "ru": "Заблокированные лестницы"
-      }
+      },
+      "file": "13_stairs_blocked.png",
+      "offsetX": 3411,
+      "offsetY": 2541,
+      "width": 1370,
+      "height": 3732,
+      "sourceWidth": 8192,
+      "sourceHeight": 8192
     },
     "14_bridge": {
-      "file": "14_bridge.png",
-      "offsetX": 1620,
-      "offsetY": 2397,
-      "width": 856,
-      "height": 742,
-      "sourceWidth": 4096,
-      "sourceHeight": 4096,
       "name": {
         "en": "Bridge",
         "ru": "Капитанский мостик"
-      }
+      },
+      "file": "14_bridge.png",
+      "offsetX": 3240,
+      "offsetY": 4800,
+      "width": 1712,
+      "height": 1473,
+      "sourceWidth": 8192,
+      "sourceHeight": 8192
     },
     "15_bridge_roof": {
-      "file": "15_bridge_roof.png",
-      "offsetX": 1641,
-      "offsetY": 2446,
-      "width": 814,
-      "height": 667,
-      "sourceWidth": 4096,
-      "sourceHeight": 4096,
       "name": {
         "en": "Bridge Roof",
         "ru": "Крыша капитанского мостика"
-      }
+      },
+      "file": "15_bridge_roof.png",
+      "offsetX": 3287,
+      "offsetY": 4897,
+      "width": 1618,
+      "height": 1323,
+      "sourceWidth": 8192,
+      "sourceHeight": 8192
     }
   }
 }
