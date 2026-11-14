@@ -332,7 +332,7 @@ void MainWindow::updateMapLayers(const QString &preferredLayer)
 
     ui->layersComboBox->setCurrentIndex(index);
     ui->layersComboBox->setEnabled(index >= 0);
-    ui->layersComboBox->setVisible(true);
+    ui->layersComboBox->setVisible(ui->layersComboBox->count() > 1);
 }
 
 void MainWindow::updateTasks()
