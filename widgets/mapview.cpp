@@ -139,14 +139,7 @@ void MapView::addItems(const QList<TarkovApi::MapItemPtr> &items, const MapConfi
             if (!task)
                 break;
 
-            const QPointF point = config.convert(task->position.x(), task->position.z());
-
             auto *marker = new IconMapMarker(QPixmap(":/resources/icons/markers/circle-alert.svg"));
-
-            const QRectF bounds = m_map->sceneBoundingRect();
-
-            marker->setPos(bounds.left() + point.x() * bounds.width(),
-                           bounds.top() + point.y() * bounds.height());
 
             marker->setLabel(task->name);
             marker->setMapToolTip(task->name, task->description,
@@ -288,8 +281,6 @@ bool MapView::loadImageMap(const ImageMapLayer &layer)
     m_playerMarker = nullptr;
 
     resetTransform();
-
-    auto *imageMap = map.get();
 
     m_map = map.release();
     m_imageLayer = layer;
