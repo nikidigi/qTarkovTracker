@@ -3,12 +3,12 @@
   "layers": {
     "1st": {
       "file": "1st.png",
-      "offsetX": 141,
-      "offsetY": 721,
-      "width": 3789,
-      "height": 2723,
-      "sourceWidth": 4096,
-      "sourceHeight": 4096,
+      "offsetX": 94,
+      "offsetY": 490,
+      "width": 2595,
+      "height": 1867,
+      "sourceWidth": 2800,
+      "sourceHeight": 2800,
       "name": {
         "en": "First level",
         "ru": "Первый уровень"
@@ -16,12 +16,12 @@
     },
     "2nd": {
       "file": "2nd.png",
-      "offsetX": 651,
-      "offsetY": 730,
-      "width": 2290,
-      "height": 2379,
-      "sourceWidth": 4096,
-      "sourceHeight": 4096,
+      "offsetX": 443,
+      "offsetY": 498,
+      "width": 1570,
+      "height": 1630,
+      "sourceWidth": 2800,
+      "sourceHeight": 2800,
       "name": {
         "en": "Second level",
         "ru": "Второй уровень"
@@ -29,12 +29,12 @@
     },
     "technical": {
       "file": "technical.png",
-      "offsetX": 904,
-      "offsetY": 715,
-      "width": 2389,
-      "height": 2386,
-      "sourceWidth": 4096,
-      "sourceHeight": 4096,
+      "offsetX": 615,
+      "offsetY": 486,
+      "width": 1639,
+      "height": 1636,
+      "sourceWidth": 2800,
+      "sourceHeight": 2800,
       "name": {
         "en": "Technical level",
         "ru": "Технический уровень"

@@ -25,7 +25,7 @@ layers=(
 for i in "${!layers[@]}"; do
   layer="${layers[$i]}"
   printf '\n=== [%d/%d] %s (zoom %s) ===\n' "$((i+1))" "${#layers[@]}" "$layer" "$ZOOM"
-  bash "$BUILD_SCRIPT" labs_v4 "$layer" "$ZOOM" 256
+  bash "$BUILD_SCRIPT" labs_v4 "$layer" "$ZOOM" 175
 done
 
 printf '\nAll %d Icebreaker layers built at zoom %s.\n' "${#layers[@]}" "$ZOOM"
