@@ -12,6 +12,7 @@
 
 #include "mapmarker.h"
 #include "arrowmapmarker.h"
+#include "imagemapitem.h"
 
 #include "tarkovapi/mapitem.h"
 
@@ -26,7 +27,7 @@ public:
     MapMarker player();
 
     bool loadSvgMap(const QString &path);
-    bool loadImageMap(const ImageMapLayer &layer);
+    bool loadImageMap(const ImageMapLayer &layer, const ImageMapLayer &defaultLayer);
 
     void removeGroup(const QString &group);
     void removeGroups(const QString &prefix);
@@ -40,6 +41,7 @@ public:
 
 private:
     QGraphicsItem *m_map = nullptr;
+    ImageMapItem *m_baseMap = nullptr;
     ArrowMapMarker *m_playerMarker = nullptr;
     QList<MapMarker *> m_markers;
     QHash<QString, bool> m_groupVisibility;

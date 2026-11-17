@@ -9,6 +9,7 @@
 #include <QtDebug>
 
 #include <algorithm>
+#include <memory>
 
 MapView::MapView(QWidget *parent) : QGraphicsView{ parent }
 {
@@ -269,12 +270,30 @@ bool MapView::loadSvgMap(const QString &filePath)
     return true;
 }
 
-bool MapView::loadImageMap(const ImageMapLayer &layer)
+
+bool MapView::loadImageMap(const ImageMapLayer &layer, const ImageMapLayer &defaultLayer)
 {
     auto map = std::make_unique<ImageMapItem>();
 
     if (!map->load(layer))
         return false;
+
+    const bool isDefaultLayer = layer.filePath == defaultLayer.filePath;
+
+    std::unique_ptr<ImageMapItem> baseMap;
+
+    if (!isDefaultLayer) {
+        if (layer.sourceSize != defaultLayer.sourceSize ||
+            layer.zoom != defaultLayer.zoom) {
+            qWarning() << "Incompatible image map layers";
+            return false;
+        }
+
+        baseMap = std::make_unique<ImageMapItem>();
+
+        if (!baseMap->load(defaultLayer))
+            return false;
+    }
 
     scene()->clear();
     m_markers.clear();
@@ -285,12 +304,20 @@ bool MapView::loadImageMap(const ImageMapLayer &layer)
     m_map = map.release();
     m_imageLayer = layer;
 
+    if (baseMap) {
+        baseMap->setOpacity(0.10);
+        baseMap->setZValue(-1);
+        scene()->addItem(baseMap.release());
+    }
+
+    m_map->setZValue(0);
     scene()->addItem(m_map);
 
     fitMap();
 
     return true;
 }
+
 
 QPointF MapView::convertPosition(const MapConfig &config, double gameX, double gameZ) const
 {

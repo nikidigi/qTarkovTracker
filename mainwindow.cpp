@@ -274,7 +274,14 @@ void MainWindow::updateMap()
             return;
         }
 
-        loaded = ui->mapView->loadImageMap(*layer);
+        const ImageMapLayer *defaultLayer = metadata->layer(metadata->defaultLayer);
+
+        if (!layer) {
+            qWarning() << "Unknown image map layer:" << metadata->defaultLayer;
+            return;
+        }
+
+        loaded = ui->mapView->loadImageMap(*layer, *defaultLayer);
     } else if (QFileInfo(svgPath).isFile()) {
         loaded = ui->mapView->loadSvgMap(svgPath);
     }
