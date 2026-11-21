@@ -31,7 +31,7 @@ QString ScreenshotWatcher::latestScreenshot() const
 
     const QFileInfoList files = dir.entryInfoList({ "*.png", "*.PNG" }, QDir::Files, QDir::Time);
 
-    return files.isEmpty() ? QString() : files.first().absoluteFilePath();
+    return files.isEmpty() ? QString() : files.first().fileName();
 }
 
 void ScreenshotWatcher::checkDirectory()
