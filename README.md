@@ -11,8 +11,7 @@ Shows on the map:
 
 ## Screenshots
 
-<img width="1860" height="1390" alt="image" src="https://github.com/user-attachments/assets/11505067-3d77-428b-85b0-0afd4a60a572" />
-
+<img width="4096" height="2464" alt="image" src="https://github.com/user-attachments/assets/c1e3835d-b152-421e-82fa-61003d2ec4f9" />
 
 ## Acknowledgments
 
