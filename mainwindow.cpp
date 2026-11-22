@@ -1,15 +1,17 @@
 #include "mainwindow.h"
+#include "settingsdialog.h"
 #include "ui_mainwindow.h"
 
-#include <algorithm>
-
 #include <QDir>
-#include <QFileDialog>
 #include <QFileInfo>
-#include <QJsonValue>
 #include <QList>
 #include <QSet>
 #include <QSignalBlocker>
+#include <QToolButton>
+
+#include <qnamespace.h>
+
+#include <algorithm>
 #include <utility>
 
 #include "mapconfigloader.h"
@@ -62,6 +64,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     connect(ui->header, &HeaderWidget::taskToggled, this, &MainWindow::showTasks);
 
+    connect(ui->settingsButton, &QToolButton::clicked, this, &MainWindow::showSettings);
+
     connect(ui->mapsComboBox, &QComboBox::currentIndexChanged, this, [this]() {
         const QString mapId = ui->mapsComboBox->currentData().value<MapConfig>().id;
         updateMapLayers(m_settings.selectedMapLayer(mapId));
@@ -71,8 +75,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     connect(ui->layersComboBox, &QComboBox::currentIndexChanged, this, [this]() { updateMap(); });
 
     connect(ui->mapsComboBox, &QComboBox::currentIndexChanged, this, &MainWindow::updateTasks);
-    connect(ui->browseScreenshotsDirButton, &QToolButton::clicked, this,
-            &MainWindow::browseScreenshotsDir);
 
     connect(&m_screenshotWatcher, &ScreenshotWatcher::screenshotAdded, this,
             &MainWindow::updatePlayerPosition);
@@ -170,6 +172,17 @@ void MainWindow::loadSettings()
 
     if (!m_settings.screenshotsDirectory().isEmpty())
         m_screenshotWatcher.setDirectory(m_settings.screenshotsDirectory());
+}
+
+void MainWindow::showSettings()
+{
+    SettingsDialog dialog(m_settings, this);
+
+    if (dialog.exec() != QDialog::Accepted)
+        return;
+
+    m_settings.setScreenshotsDirectory(dialog.screenshotsDirectory());
+    m_screenshotWatcher.setDirectory(dialog.screenshotsDirectory());
 }
 
 void MainWindow::translateMaps()
@@ -456,19 +469,6 @@ void MainWindow::restoreTasks()
     }
 
     ui->mapView->addItems(items, config);
-}
-
-void MainWindow::browseScreenshotsDir(bool)
-{
-    const QString directory = QFileDialog::getExistingDirectory(
-            this, tr("Select screenshots directory"),
-            m_settings.screenshotsDirectory().isEmpty() ? QDir::currentPath()
-                                                        : m_settings.screenshotsDirectory());
-
-    if (!directory.isEmpty()) {
-        m_settings.setScreenshotsDirectory(directory);
-        m_screenshotWatcher.setDirectory(directory);
-    }
 }
 
 void MainWindow::fetchAll()

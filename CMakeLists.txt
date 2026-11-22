@@ -28,6 +28,7 @@ qt_add_executable(qTarkovTracker
     mapconfigloader.h
     screenshotparser.h
     screenshotwatcher.h screenshotwatcher.cpp
+    settingsdialog.h settingsdialog.cpp settingsdialog.ui
     tarkovapi/baseresponse.h tarkovapi/baseresponse.cpp
     tarkovapi/cachemanager.h tarkovapi/cachemanager.cpp
     tarkovapi/client.h tarkovapi/client.cpp
@@ -36,6 +37,7 @@ qt_add_executable(qTarkovTracker
     tarkovapi/mapsresponse.h tarkovapi/mapsresponse.cpp
     tarkovapi/tasksresponse.h tarkovapi/tasksresponse.cpp
     widgets/arrowmapmarker.h widgets/arrowmapmarker.cpp
+    widgets/autowidthcombobox.h widgets/autowidthcombobox.cpp
     widgets/checklistpopup.h widgets/checklistpopup.cpp
     widgets/headerwidget.h widgets/headerwidget.cpp
     widgets/iconmapmarker.h widgets/iconmapmarker.cpp
@@ -43,7 +45,7 @@ qt_add_executable(qTarkovTracker
     widgets/mapmarker.h widgets/mapmarker.cpp
     widgets/maptooltip.h widgets/maptooltip.cpp
     widgets/mapview.h widgets/mapview.cpp
-    widgets/autowidthcombobox.h widgets/autowidthcombobox.cpp
+    widgets/statuslabel.h widgets/statuslabel.cpp
 )
 
 find_package(Git REQUIRED)

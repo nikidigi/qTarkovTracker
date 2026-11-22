@@ -80,12 +80,14 @@ bool CacheManager::put(const QUrl &url, const QJsonObject &data) const
     return file.write(json) == json.size() && file.commit();
 }
 
-void CacheManager::clear()
+bool CacheManager::clear()
 {
-    const QString directory =
+    const QString path =
             QStandardPaths::writableLocation(QStandardPaths::CacheLocation) + "/api";
 
-    QDir(directory).removeRecursively();
+    QDir dir(path);
+
+    return !dir.exists() || dir.removeRecursively();
 }
 
 } // namespace TarkovApi

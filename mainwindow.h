@@ -26,6 +26,7 @@ public:
 
     void loadMaps();
     void loadSettings();
+    void showSettings();
 
 public slots:
     void translateMaps();
@@ -38,8 +39,6 @@ public slots:
 
     void showTasks(const QVariant &, bool);
     void restoreTasks();
-
-    void browseScreenshotsDir(bool checked = false);
 
 private:
     Ui::MainWindow *ui;

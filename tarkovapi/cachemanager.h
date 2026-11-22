@@ -18,7 +18,8 @@ public:
     std::optional<QJsonObject> get(const QUrl &url) const;
     bool put(const QUrl &url, const QJsonObject &data) const;
 
-    void clear();
+public:
+    static bool clear();
 
 private:
     QString filePath(const QUrl &url) const;
