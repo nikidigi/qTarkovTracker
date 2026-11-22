@@ -22,11 +22,11 @@ QString displayMode(const QString &mode)
 
 HeaderWidget::HeaderWidget(QWidget *parent) : QWidget{ parent } { }
 
-void HeaderWidget::initialize()
+void HeaderWidget::initialize(const AppSettings &settings)
 {
     initModeButton();
     initLanguageButton();
-    initMarkersPopup();
+    initMarkersPopup(settings);
     initTasksPopup();
 
     auto *mapsComboBox = findChild<QComboBox *>("mapsComboBox");
@@ -83,11 +83,6 @@ void HeaderWidget::setLanguage(const QString &language)
     for (auto *action : m_langButton->menu()->actions()) {
         action->setChecked(action->data().toString() == language);
     }
-}
-
-void HeaderWidget::setExtracts(const QList<CheckListPopup::Item> &items)
-{
-    m_markersPopup->setItems(items);
 }
 
 void HeaderWidget::setTasks(const QList<CheckListPopup::Item> &items)
@@ -151,12 +146,21 @@ void HeaderWidget::initLanguageButton()
     });
 }
 
-void HeaderWidget::initMarkersPopup()
+void HeaderWidget::initMarkersPopup(const AppSettings &settings)
 {
-    auto *markersButton = findChild<QToolButton *>("markersButton");
-
     m_markersPopup = new CheckListPopup(this);
     m_markersPopup->setFilterEnabled(false);
+
+    m_markersPopup->setItems({
+        { tr("PMC extracts"), "extracts/pmc", settings.markerVisible("extracts/pmc") },
+        { tr("Scav extracts"), "extracts/scav", settings.markerVisible("extracts/scav") },
+        { tr("Shared extracts"), "extracts/shared", settings.markerVisible("extracts/shared") },
+        { tr("Transits"), "extracts/transit", settings.markerVisible("extracts/transit") },
+        { tr("Locks"), "locks", settings.markerVisible("locks") },
+        { tr("Switches"), "switches", settings.markerVisible("switches") },
+    });
+
+    auto *markersButton = findChild<QToolButton *>("markersButton");
 
     connect(markersButton, &QToolButton::clicked, this,
             [this, markersButton]() { m_markersPopup->showBelow(markersButton); });
@@ -169,10 +173,10 @@ void HeaderWidget::initMarkersPopup()
 
 void HeaderWidget::initTasksPopup()
 {
-    auto *tasksButton = findChild<QToolButton *>("tasksButton");
-
     m_tasksPopup = new CheckListPopup(this);
     m_tasksPopup->setFilterEnabled(true);
+
+    auto *tasksButton = findChild<QToolButton *>("tasksButton");
 
     connect(tasksButton, &QToolButton::clicked, this,
             [this, tasksButton]() { m_tasksPopup->showBelow(tasksButton); });

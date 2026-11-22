@@ -1,6 +1,7 @@
 #ifndef HEADERWIDGET_H
 #define HEADERWIDGET_H
 
+#include "appsettings.h"
 #include "checklistpopup.h"
 
 #include <QMainWindow>
@@ -16,12 +17,11 @@ public:
     explicit HeaderWidget(QWidget *parent = nullptr);
 
     // Must be called after ui->setupUi() in MainWindow
-    void initialize();
+    void initialize(const AppSettings &settings);
 
     void setMode(const QString &mode);
     void setLanguage(const QString &language);
 
-    void setExtracts(const QList<CheckListPopup::Item> &items);
     void setTasks(const QList<CheckListPopup::Item> &items);
 
 signals:
@@ -41,7 +41,7 @@ private:
     void initModeButton();
     void initLanguageButton();
 
-    void initMarkersPopup();
+    void initMarkersPopup(const AppSettings &settings);
     void initTasksPopup();
 
     void updateMaximizeButton();

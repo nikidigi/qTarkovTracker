@@ -22,7 +22,7 @@
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    ui->header->initialize();
+    ui->header->initialize(m_settings);
 
     setWindowTitle(QString("qTarkovTracker %1").arg(QApplication::applicationVersion()));
     setWindowFlags(
@@ -34,15 +34,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     loadMaps();
     loadSettings();
-
-    ui->header->setExtracts({
-            { tr("PMC extracts"), "extracts/pmc", m_settings.markerVisible("extracts/pmc") },
-            { tr("Scav extracts"), "extracts/scav", m_settings.markerVisible("extracts/scav") },
-            { tr("Shared extracts"), "extracts/shared", m_settings.markerVisible("extracts/shared") },
-            { tr("Transits"), "extracts/transit", m_settings.markerVisible("extracts/transit") },
-            { tr("Locks"), "locks", m_settings.markerVisible("locks") },
-            { tr("Switches"), "switches", m_settings.markerVisible("switches") },
-    });
 
     connect(ui->header, &HeaderWidget::modeChanged, this, [this](const QString &mode) {
         m_settings.setMode(mode);
