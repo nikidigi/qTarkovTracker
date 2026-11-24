@@ -174,6 +174,9 @@ void MainWindow::showSettings()
 
     m_settings.setScreenshotsDirectory(dialog.screenshotsDirectory());
     m_screenshotWatcher.setDirectory(dialog.screenshotsDirectory());
+
+    m_settings.setCacheLifetimeHours(dialog.cacheLifetimeHours());
+    m_api.setCacheLifetime(dialog.cacheLifetimeHours());
 }
 
 void MainWindow::translateMaps()

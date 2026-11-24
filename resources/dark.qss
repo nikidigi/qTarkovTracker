@@ -334,4 +334,49 @@ SettingsDialog QLineEdit:focus {
     border-color: #64748B;
 }
 
+SettingsDialog QSpinBox {
+    background-color: #171D27;
+    color: #F2F4F8;
+    border: 1px solid #3A4555;
+    border-radius: 6px;
+    padding: 6px 10px;
+    min-height: 24px;
+    selection-background-color: #45618A;
+    selection-color: #FFFFFF;
+}
+
+SettingsDialog QSpinBox:focus {
+    border-color: #64748B;
+}
+
+SettingsDialog QSpinBox::up-button,
+SettingsDialog QSpinBox::down-button {
+    background-color: #252D3B;
+    border-left: 1px solid #3A4555;
+    width: 22px;
+}
+
+SettingsDialog QSpinBox::up-button {
+    image: url(:/resources/icons/chevron-up.svg);
+    subcontrol-origin: border;
+    subcontrol-position: top right;
+    border-top-right-radius: 6px;
+}
+
+SettingsDialog QSpinBox::down-button {
+    image: url(:/resources/icons/chevron-down.svg);
+    subcontrol-origin: border;
+    subcontrol-position: bottom right;
+    border-bottom-right-radius: 6px;
+}
+
+SettingsDialog QSpinBox::up-button:hover,
+SettingsDialog QSpinBox::down-button:hover {
+    background-color: #364255;
+}
+
+SettingsDialog QSpinBox::up-button:pressed,
+SettingsDialog QSpinBox::down-button:pressed {
+    background-color: #45618A;
+}
 /** /SettingsDialog **/

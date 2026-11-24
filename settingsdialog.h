@@ -18,6 +18,7 @@ public:
     ~SettingsDialog();
 
     QString screenshotsDirectory() const;
+    int cacheLifetimeHours() const;
 
 public slots:
     void clearScreenshots();

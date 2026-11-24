@@ -2,7 +2,10 @@
 
 int AppSettings::cacheLifetimeHours() const
 {
-    return m_settings.value("api/cacheLifetimeHours", 24).toInt();
+    bool ok = false;
+    const int hours = m_settings.value("api/cacheLifetimeHours", 24).toInt(&ok);
+
+    return ok ? std::max(1, hours) : 24;
 }
 
 void AppSettings::setCacheLifetimeHours(int hours)

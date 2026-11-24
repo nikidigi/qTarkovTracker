@@ -35,6 +35,7 @@ SettingsDialog::SettingsDialog(const AppSettings &settings, QWidget *parent):
     connect(ui->browseButton, &QPushButton::clicked, this, &SettingsDialog::browseScreenshotsDir);
 
     ui->screenshotsDirectoryEdit->setText(m_settings.screenshotsDirectory());
+    ui->cacheLifeTimeHours->setValue(m_settings.cacheLifetimeHours());
 }
 
 SettingsDialog::~SettingsDialog()
@@ -45,6 +46,11 @@ SettingsDialog::~SettingsDialog()
 QString SettingsDialog::screenshotsDirectory() const
 {
     return ui->screenshotsDirectoryEdit->text();
+}
+
+int SettingsDialog::cacheLifetimeHours() const
+{
+    return ui->cacheLifeTimeHours->value();
 }
 
 void SettingsDialog::clearScreenshots()
