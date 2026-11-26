@@ -79,7 +79,7 @@ void MapView::setPlayerPosition(const MapConfig &config, double gameX, double ga
     }
 
     if (!m_playerMarker) {
-        m_playerMarker = new ArrowMapMarker();
+        m_playerMarker = new PlayerMapMarker();
         m_playerMarker->setZValue(MarkerZ::Player);
         scene()->addItem(m_playerMarker);
     }

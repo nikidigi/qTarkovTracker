@@ -11,7 +11,7 @@
 #include "imagemapmetadata.h"
 
 #include "mapmarker.h"
-#include "arrowmapmarker.h"
+#include "playermapmarker.h"
 #include "imagemapitem.h"
 
 #include "tarkovapi/mapitem.h"
@@ -42,7 +42,7 @@ public:
 private:
     QGraphicsItem *m_map = nullptr;
     ImageMapItem *m_baseMap = nullptr;
-    ArrowMapMarker *m_playerMarker = nullptr;
+    PlayerMapMarker *m_playerMarker = nullptr;
     QList<MapMarker *> m_markers;
     QHash<QString, bool> m_groupVisibility;
     std::optional<ImageMapLayer> m_imageLayer;
