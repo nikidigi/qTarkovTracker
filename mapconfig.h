@@ -24,6 +24,7 @@ struct SvgMapLayer
 {
     QString id;
     QString name;
+    QList<QPair<double, double>> heightRanges;
 };
 
 struct MapConfig
@@ -32,6 +33,8 @@ struct MapConfig
     QUrl svgPath;
     QString defaultSvgLayer;
     QList<SvgMapLayer> svgLayers;
+
+    bool labelVisibleOnLayer(const MapLabel &label, const QString &layerId) const;
 
     // [scaleX, offsetX, scaleY, offsetY]
     double transform[4] = { };

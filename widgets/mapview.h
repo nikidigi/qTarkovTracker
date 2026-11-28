@@ -38,7 +38,7 @@ public:
 
     void addItems(const QList<TarkovApi::MapItemPtr> &items, const MapConfig &config);
 
-    void addLabels(const MapConfig &config);
+    void addLabels(const MapConfig &config, const QString &layerId = {});
 
 private:
     QGraphicsItem *m_map = nullptr;

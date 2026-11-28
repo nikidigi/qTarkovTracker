@@ -82,3 +82,31 @@ QPointF MapConfig::normalizeToBounds(double gameX, double gameZ) const
 
     return { (point.x() - minX) / width, (point.y() - minY) / height };
 }
+
+bool MapConfig::labelVisibleOnLayer(const MapLabel &label, const QString &layerId) const
+{
+    for (const auto &layer : svgLayers) {
+        if (layer.id != layerId)
+            continue;
+
+        // A layer without height metadata cannot safely filter labels.
+        if (layer.heightRanges.isEmpty())
+            return true;
+
+        for (const auto &range : layer.heightRanges) {
+            // Use positive overlap: adjacent floors only touch at their boundary.
+            if (label.top > range.first && label.bottom < range.second)
+                return true;
+
+            // Some labels represent a single height (bottom == top).
+            if (label.bottom == label.top &&
+                label.bottom >= range.first && label.top <= range.second)
+                return true;
+        }
+
+        return false;
+    }
+
+    // Maps without SVG layers (including PNG maps) retain their labels.
+    return true;
+}

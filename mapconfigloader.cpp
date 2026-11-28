@@ -53,7 +53,14 @@ QList<MapConfig> MapConfigLoader::parse(const QByteArray &json)
             config.defaultSvgLayer = map.value("svgLayer").toString();
 
             if (!config.defaultSvgLayer.isEmpty()) {
-                config.svgLayers.append({ config.defaultSvgLayer, "Ground level" });
+                SvgMapLayer groundLayer { config.defaultSvgLayer, "Ground level", {} };
+                const auto groundHeight = map.value(
+                                                     map.contains("heightRange") ? "heightRange" : "_heightRange"
+                                                     ).toArray();
+                if (groundHeight.size() == 2)
+                    groundLayer.heightRanges.append({ groundHeight[0].toDouble(),
+                                                      groundHeight[1].toDouble() });
+                config.svgLayers.append(groundLayer);
 
                 for (const auto &layerValue : map.value("layers").toArray()) {
                     const auto layerObject = layerValue.toObject();
@@ -63,7 +70,16 @@ QList<MapConfig> MapConfigLoader::parse(const QByteArray &json)
                         continue;
 
                     const QString name = layerObject.value("name").toString();
-                    config.svgLayers.append({ id, name.isEmpty() ? id : name });
+                    SvgMapLayer layer { id, name.isEmpty() ? id : name, {} };
+
+                    for (const auto &extentValue : layerObject.value("extents").toArray()) {
+                        const auto height = extentValue.toObject().value("height").toArray();
+                        if (height.size() == 2)
+                            layer.heightRanges.append({ height[0].toDouble(),
+                                                        height[1].toDouble() });
+                    }
+
+                    config.svgLayers.append(layer);
                 }
             }
             config.coordinateRotation = map.value("coordinateRotation").toDouble();

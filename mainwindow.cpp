@@ -306,7 +306,7 @@ void MainWindow::updateMap()
     ui->mapView->addItems(m_api.mapsResponse().transits(config.id), config);
     ui->mapView->addItems(m_api.mapsResponse().switches(config.id), config);
 
-    ui->mapView->addLabels(config);
+    ui->mapView->addLabels(config, layerId);
 
     restoreTasks();
 

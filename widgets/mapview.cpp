@@ -210,7 +210,7 @@ void MapView::addItems(const QList<TarkovApi::MapItemPtr> &items, const MapConfi
     }
 }
 
-void MapView::addLabels(const MapConfig &config)
+void MapView::addLabels(const MapConfig &config, const QString &layerId)
 {
     if (!m_map)
         return;
@@ -228,6 +228,9 @@ void MapView::addLabels(const MapConfig &config)
     font.setBold(true);
 
     for (const auto &label : config.labels) {
+        if (!config.labelVisibleOnLayer(label, layerId))
+            continue;
+
         const QPointF pos = config.convert(label.position.x(), label.position.y());
         auto *item = new QGraphicsSimpleTextItem(label.text);
 
