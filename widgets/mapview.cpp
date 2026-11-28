@@ -11,6 +11,7 @@
 
 #include <algorithm>
 #include <memory>
+#include <optional>
 
 MapView::MapView(QWidget *parent) : QGraphicsView{ parent }
 {
@@ -259,7 +260,10 @@ bool MapView::loadSvgMap(const QString &filePath, const QString &layerId,
     if (!map->load(filePath, layerId, defaultLayerId))
         return false;
 
-    const auto viewCenter = normalizedViewCenter();
+    bool preserveView = m_currentMapPath == filePath;
+    const auto viewCenter = preserveView ? normalizedViewCenter() : std::nullopt;
+
+    m_currentMapPath = filePath;
 
     scene()->clear();
     m_markers.clear();
@@ -272,12 +276,16 @@ bool MapView::loadSvgMap(const QString &filePath, const QString &layerId,
 
     scene()->addItem(m_map);
 
+    if (!preserveView)
+        m_zoomFactor = 1.0;
+
     fitMap();
-    restoreViewCenter(viewCenter);
+
+    if (preserveView)
+        restoreViewCenter(viewCenter);
 
     return true;
 }
-
 
 bool MapView::loadImageMap(const ImageMapLayer &layer, const ImageMapLayer &defaultLayer)
 {
@@ -303,7 +311,10 @@ bool MapView::loadImageMap(const ImageMapLayer &layer, const ImageMapLayer &defa
             return false;
     }
 
-    const auto viewCenter = normalizedViewCenter();
+    const bool preserveView = m_currentMapPath == defaultLayer.filePath;
+    const auto viewCenter = preserveView ? normalizedViewCenter() : std::nullopt;
+
+    m_currentMapPath = defaultLayer.filePath;
 
     scene()->clear();
     m_markers.clear();
@@ -323,8 +334,13 @@ bool MapView::loadImageMap(const ImageMapLayer &layer, const ImageMapLayer &defa
     m_map->setZValue(0);
     scene()->addItem(m_map);
 
+    if (!preserveView)
+        m_zoomFactor = 1.0;
+
     fitMap();
-    restoreViewCenter(viewCenter);
+
+    if (preserveView)
+        restoreViewCenter(viewCenter);
 
     return true;
 }
@@ -374,9 +390,7 @@ void MapView::fitMap()
     if (!m_map)
         return;
 
-    const auto *imageMap = dynamic_cast<const ImageMapItem *>(m_map);
-    const QRectF rect = imageMap ? imageMap->imageRect() : m_map->boundingRect();
-    const QRectF bounds = m_map->mapRectToScene(rect);
+    const QRectF bounds = m_map->sceneBoundingRect();
 
     if (bounds.isEmpty())
         return;

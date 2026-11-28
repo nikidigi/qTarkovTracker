@@ -48,6 +48,7 @@ private:
     QHash<QString, bool> m_groupVisibility;
     std::optional<ImageMapLayer> m_imageLayer;
     qreal m_zoomFactor = 1.0;
+    QString m_currentMapPath;
 
     QPointF convertPosition(const MapConfig &config, double gameX, double gameZ) const;
 
