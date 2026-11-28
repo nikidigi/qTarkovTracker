@@ -256,6 +256,8 @@ bool MapView::loadSvgMap(const QString &filePath, const QString &layerId,
     if (!map->load(filePath, layerId, defaultLayerId))
         return false;
 
+    const auto viewCenter = normalizedViewCenter();
+
     scene()->clear();
     m_markers.clear();
     m_playerMarker = nullptr;
@@ -268,6 +270,7 @@ bool MapView::loadSvgMap(const QString &filePath, const QString &layerId,
     scene()->addItem(m_map);
 
     fitMap();
+    restoreViewCenter(viewCenter);
 
     return true;
 }
@@ -297,6 +300,8 @@ bool MapView::loadImageMap(const ImageMapLayer &layer, const ImageMapLayer &defa
             return false;
     }
 
+    const auto viewCenter = normalizedViewCenter();
+
     scene()->clear();
     m_markers.clear();
     m_playerMarker = nullptr;
@@ -316,6 +321,7 @@ bool MapView::loadImageMap(const ImageMapLayer &layer, const ImageMapLayer &defa
     scene()->addItem(m_map);
 
     fitMap();
+    restoreViewCenter(viewCenter);
 
     return true;
 }
@@ -334,6 +340,30 @@ QPointF MapView::convertPosition(const MapConfig &config, double gameX, double g
 
     return { bounds.left() + normalized.x() * bounds.width(),
              bounds.top() + normalized.y() * bounds.height() };
+}
+
+std::optional<QPointF> MapView::normalizedViewCenter() const
+{
+    if (!m_map)
+        return std::nullopt;
+
+    const QRectF bounds = m_map->sceneBoundingRect();
+    if (bounds.isEmpty())
+        return std::nullopt;
+
+    const QPointF center = mapToScene(viewport()->rect().center());
+    return QPointF((center.x() - bounds.left()) / bounds.width(),
+                   (center.y() - bounds.top()) / bounds.height());
+}
+
+void MapView::restoreViewCenter(const std::optional<QPointF> &center)
+{
+    if (!center || !m_map)
+        return;
+
+    const QRectF bounds = m_map->sceneBoundingRect();
+    centerOn(bounds.left() + center->x() * bounds.width(),
+             bounds.top() + center->y() * bounds.height());
 }
 
 void MapView::fitMap()
@@ -365,6 +395,7 @@ void MapView::fitMap()
             );
 
     fitInView(viewRect, Qt::KeepAspectRatio);
+    scale(m_zoomFactor, m_zoomFactor);
 }
 
 void MapView::wheelEvent(QWheelEvent *event)
@@ -372,4 +403,5 @@ void MapView::wheelEvent(QWheelEvent *event)
     const double factor = event->angleDelta().y() > 0 ? 1.15 : 1.0 / 1.15;
 
     scale(factor, factor);
+    m_zoomFactor *= factor;
 }

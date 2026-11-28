@@ -47,8 +47,12 @@ private:
     QList<MapMarker *> m_markers;
     QHash<QString, bool> m_groupVisibility;
     std::optional<ImageMapLayer> m_imageLayer;
+    qreal m_zoomFactor = 1.0;
 
     QPointF convertPosition(const MapConfig &config, double gameX, double gameZ) const;
+
+    std::optional<QPointF> normalizedViewCenter() const;
+    void restoreViewCenter(const std::optional<QPointF> &center);
 
     void fitMap();
 
