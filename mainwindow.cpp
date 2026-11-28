@@ -283,14 +283,14 @@ void MainWindow::updateMap()
 
         const ImageMapLayer *defaultLayer = metadata->layer(metadata->defaultLayer);
 
-        if (!layer) {
+        if (!defaultLayer) {
             qWarning() << "Unknown image map layer:" << metadata->defaultLayer;
             return;
         }
 
         loaded = ui->mapView->loadImageMap(*layer, *defaultLayer);
     } else if (QFileInfo(svgPath).isFile()) {
-        loaded = ui->mapView->loadSvgMap(svgPath);
+        loaded = ui->mapView->loadSvgMap(svgPath, layerId, config.defaultSvgLayer);
     }
 
     if (!loaded) {
@@ -322,25 +322,34 @@ void MainWindow::updateMapLayers(const QString &preferredLayer)
     ui->layersComboBox->clear();
     ui->layersComboBox->setEnabled(false);
 
-    const ImageMapMetadata *metadata = imageMapMetadata(mapId);
-    if (!metadata) {
-         ui->layersComboBox->setVisible(false);
-        return;
-    }
+    QString defaultLayer;
 
-    QStringList layerIds = metadata->layers.keys();
-    layerIds.sort();
+    if (const ImageMapMetadata *metadata = imageMapMetadata(mapId)) {
+        QStringList layerIds = metadata->layers.keys();
+        layerIds.sort();
 
-    for (const QString &id : layerIds) {
-        const auto it = metadata->layers.constFind(id);
-        const QString name = it.value().name(m_settings.language());
+        for (const QString &id : layerIds) {
+            const auto it = metadata->layers.constFind(id);
+            const QString name = it.value().name(m_settings.language());
+            ui->layersComboBox->addItem(name.isEmpty() ? id : name, id);
+        }
 
-        ui->layersComboBox->addItem(name.isEmpty() ? id : name, id);
+        defaultLayer = metadata->defaultLayer;
+    } else {
+        const MapConfig config = ui->mapsComboBox->currentData().value<MapConfig>();
+
+        for (const SvgMapLayer &layer : config.svgLayers) {
+            const QString name = layer.id == config.defaultSvgLayer
+                    ? tr("Ground level") : layer.name;
+            ui->layersComboBox->addItem(name, layer.id);
+        }
+
+        defaultLayer = config.defaultSvgLayer;
     }
 
     int index = ui->layersComboBox->findData(preferredLayer);
     if (index < 0)
-        index = ui->layersComboBox->findData(metadata->defaultLayer);
+        index = ui->layersComboBox->findData(defaultLayer);
     if (index < 0 && ui->layersComboBox->count() > 0)
         index = 0;
 

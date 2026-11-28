@@ -26,7 +26,8 @@ public:
 
     MapMarker player();
 
-    bool loadSvgMap(const QString &path);
+    bool loadSvgMap(const QString &path, const QString &layerId = {},
+                    const QString &defaultLayerId = {});
     bool loadImageMap(const ImageMapLayer &layer, const ImageMapLayer &defaultLayer);
 
     void removeGroup(const QString &group);

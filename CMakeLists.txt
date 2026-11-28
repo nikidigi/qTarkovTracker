@@ -42,6 +42,7 @@ qt_add_executable(qTarkovTracker
     widgets/headerwidget.h widgets/headerwidget.cpp
     widgets/iconmapmarker.h widgets/iconmapmarker.cpp
     widgets/imagemapitem.h widgets/imagemapitem.cpp
+    widgets/svgmapitem.h widgets/svgmapitem.cpp
     widgets/mapmarker.h widgets/mapmarker.cpp
     widgets/maptooltip.h widgets/maptooltip.cpp
     widgets/mapview.h widgets/mapview.cpp

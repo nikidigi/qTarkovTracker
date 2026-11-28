@@ -20,10 +20,18 @@ struct MapLabel
     double top = 10000;
 };
 
+struct SvgMapLayer
+{
+    QString id;
+    QString name;
+};
+
 struct MapConfig
 {
     QString id;
     QUrl svgPath;
+    QString defaultSvgLayer;
+    QList<SvgMapLayer> svgLayers;
 
     // [scaleX, offsetX, scaleY, offsetY]
     double transform[4] = { };

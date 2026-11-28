@@ -2,6 +2,7 @@
 
 #include "iconmapmarker.h"
 #include "imagemapitem.h"
+#include "svgmapitem.h"
 
 #include <QDir>
 #include <QFileInfo>
@@ -247,11 +248,12 @@ void MapView::addLabels(const MapConfig &config)
     }
 }
 
-bool MapView::loadSvgMap(const QString &filePath)
+bool MapView::loadSvgMap(const QString &filePath, const QString &layerId,
+                         const QString &defaultLayerId)
 {
-    auto map = std::make_unique<QGraphicsSvgItem>(filePath);
+    auto map = std::make_unique<SvgMapItem>();
 
-    if (!map->renderer() || !map->renderer()->isValid())
+    if (!map->load(filePath, layerId, defaultLayerId))
         return false;
 
     scene()->clear();

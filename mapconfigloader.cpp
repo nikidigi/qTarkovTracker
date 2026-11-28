@@ -50,6 +50,22 @@ QList<MapConfig> MapConfigLoader::parse(const QByteArray &json)
 
             config.id = root.value("normalizedName").toString();
             config.svgPath = QUrl(svgPath);
+            config.defaultSvgLayer = map.value("svgLayer").toString();
+
+            if (!config.defaultSvgLayer.isEmpty()) {
+                config.svgLayers.append({ config.defaultSvgLayer, "Ground level" });
+
+                for (const auto &layerValue : map.value("layers").toArray()) {
+                    const auto layerObject = layerValue.toObject();
+                    const QString id = layerObject.value("svgLayer").toString();
+
+                    if (id.isEmpty() || id == config.defaultSvgLayer)
+                        continue;
+
+                    const QString name = layerObject.value("name").toString();
+                    config.svgLayers.append({ id, name.isEmpty() ? id : name });
+                }
+            }
             config.coordinateRotation = map.value("coordinateRotation").toDouble();
 
             for (int i = 0; i < 4; ++i)
